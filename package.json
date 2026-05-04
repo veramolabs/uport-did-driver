@@ -28,7 +28,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "did-resolver": "^4.1.0",
+    "did-resolver": "^5.0.0",
     "ens-did-resolver": "^1.0.4",
     "ethers": "^6.13.3",
     "ethr-did-resolver": "^11.0.1",
