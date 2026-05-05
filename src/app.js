@@ -38,15 +38,15 @@ export const providerConfig = {
       registry: '0xdca7ef03e98e0dc2b855be647c39abe984fcf21b',
       legacyNonce: true,
       provider: buildProvider(1, [
+        'https://mainnet.gateway.tenderly.co',
+        'https://gateway.tenderly.co/public/mainnet',
         `https://mainnet.infura.io/v3/${infuraId}`,
-        'https://eth-pokt.nodies.app',
         'https://ethereum-rpc.publicnode.com',
+        'https://eth-pokt.nodies.app',
         'https://rpc.mevblocker.io',
         'https://rpc.mevblocker.io/fast',
         'https://rpc.mevblocker.io/noreverts',
         'https://rpc.mevblocker.io/fullprivacy',
-        'https://mainnet.gateway.tenderly.co',
-        'https://gateway.tenderly.co/public/mainnet',
         'https://eth-mainnet.public.blastapi.io',
         // Below: known to fail on historical getLogs — kept commented for reference
         // 'https://eth.meowrpc.com',        // CALL_EXCEPTION data=null

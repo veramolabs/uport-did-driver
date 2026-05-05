@@ -1,8 +1,8 @@
-import { describe, it, expect, jest } from '@jest/globals'
+import { describe, it, expect, vi } from 'vitest'
 import { FailoverProvider } from '../failoverProvider.js'
 
 // Minimal mock for a JsonRpcProvider — only `send` matters
-const mockProvider = (impl) => ({ send: jest.fn(impl) })
+const mockProvider = (impl) => ({ send: vi.fn(impl) })
 
 describe('FailoverProvider', () => {
   describe('happy path', () => {

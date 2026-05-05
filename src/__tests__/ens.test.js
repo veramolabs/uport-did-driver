@@ -1,8 +1,6 @@
 import app from '../app.js'
 import request from 'supertest'
-import { jest } from '@jest/globals'
-
-jest.setTimeout(30000)
+import { describe, expect, it } from 'vitest'
 
 describe('did:ens driver', () => {
   it.skip('responds with didResolutionResult', async () => {

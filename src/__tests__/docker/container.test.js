@@ -1,5 +1,5 @@
 import { execSync, spawn } from 'child_process'
-import { afterAll, beforeAll, describe, expect, it } from '@jest/globals'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 const IMAGE = 'uport-did-driver-test:latest'
 const CONTAINER = 'uport-did-driver-test'
@@ -11,17 +11,16 @@ async function resolve(did) {
 }
 
 function waitForReady(url, timeout = 30000) {
-  const start = Date.now()
-  return new Promise((resolve, reject) => {
-    const poll = async () => {
+  const deadline = Date.now() + timeout
+  return new Promise(async (resolve, reject) => {
+    while (Date.now() < deadline) {
       try {
         const res = await fetch(url)
         if (res.ok) return resolve()
       } catch (_) {}
-      if (Date.now() - start > timeout) return reject(new Error(`Timed out waiting for ${url}`))
-      setTimeout(poll, 500)
+      await new Promise((r) => setTimeout(r, 500))
     }
-    poll()
+    reject(new Error(`Timed out waiting for ${url}`))
   })
 }
 

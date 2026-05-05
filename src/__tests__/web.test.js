@@ -1,5 +1,6 @@
 import app from '../app.js'
 import request from 'supertest'
+import { describe, expect, it } from 'vitest'
 
 describe('did:web driver', () => {
   it('responds with didResolutionResult for did:web:skounis.github.io', async () => {

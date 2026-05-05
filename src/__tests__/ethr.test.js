@@ -1,9 +1,7 @@
 import app, { providerConfig, timers } from '../app.js'
 import request from 'supertest'
-import { afterAll, describe, expect, it, jest } from '@jest/globals'
+import { afterAll, describe, expect, it } from 'vitest'
 import { deployments } from 'ethr-did-resolver'
-
-jest.setTimeout(30000)
 
 describe('did:ethr driver', () => {
   afterAll(() => {

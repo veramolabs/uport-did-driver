@@ -5,7 +5,7 @@ RUN corepack prepare pnpm@latest --activate && corepack pnpm install --prod --fr
 
 FROM cgr.dev/chainguard/node:latest
 LABEL maintainer="Mircea NISTOR <work@mirceanis.xyz>"
-LABEL repository="git+ssh://git@github.com/veramolabs/uport-did-driver.git"
+LABEL repository="git+ssh://git@github.com/mirceanis/uport-did-driver.git"
 
 WORKDIR /uport-did-driver
 COPY --from=build /uport-did-driver/node_modules ./node_modules
