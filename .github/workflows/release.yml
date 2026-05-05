@@ -6,14 +6,6 @@ on:
       - 'master'
 jobs:
   build-test-publish:
-    env:
-      GH_TOKEN: ${{secrets.GH_TOKEN}}
-      GH_USER: ${{secrets.GH_USER}}
-      GH_EMAIL: ${{secrets.GH_EMAIL}}
-      NPM_TOKEN: unused
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -33,13 +25,24 @@ jobs:
       - run: pnpm run test
 
       - name: 'Setup git coordinates'
+        env:
+          GH_USER: ${{secrets.GH_USER}}
+          GH_EMAIL: ${{secrets.GH_EMAIL}}
         run: |
-          git remote set-url origin https://uport-project:$GH_TOKEN@github.com/uport-project/uport-did-driver.git
           git config user.name $GH_USER
           git config user.email $GH_EMAIL
+
       - name: Login to DockerHub Registry
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
         run: echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_USERNAME --password-stdin
 
       - name: Push the tagged Docker image
         if: github.ref == 'refs/heads/master'
+        env:
+          GH_TOKEN: ${{secrets.GH_TOKEN}}
+          NPM_TOKEN: unused
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
         run: pnpm run release
