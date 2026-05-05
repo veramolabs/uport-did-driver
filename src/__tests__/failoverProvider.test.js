@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { FailoverProvider } from '../failoverProvider.js'
 
 // Minimal mock for a JsonRpcProvider — only `send` matters
-const mockProvider = (impl) => ({ send: vi.fn(impl) })
+const mockProvider = (impl) => ({ send: vi.fn(impl), _getConnection: () => ({ url: 'http://mock' }) })
 
 describe('FailoverProvider', () => {
   describe('happy path', () => {
@@ -119,6 +119,16 @@ describe('FailoverProvider', () => {
       const p2 = mockProvider(() => Promise.reject(err2))
       const provider = new FailoverProvider([p1, p2], 1)
       await expect(provider.send('eth_blockNumber', [])).rejects.toMatchObject({ message: 'err2' })
+    })
+  })
+
+  describe('constructor validation', () => {
+    it('throws when providers is empty', () => {
+      expect(() => new FailoverProvider([], 1)).toThrow('FailoverProvider requires at least one provider')
+    })
+
+    it('throws when providers is null', () => {
+      expect(() => new FailoverProvider(null, 1)).toThrow('FailoverProvider requires at least one provider')
     })
   })
 })

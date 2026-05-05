@@ -27,9 +27,10 @@ export class FailoverProvider extends JsonRpcProvider {
   #providers
 
   constructor(providers, chainId, options) {
+    if (!providers?.length) throw new Error('FailoverProvider requires at least one provider')
     // Use the first provider's connection URL as the "primary" for JsonRpcProvider init
     // We'll override send() so this URL is never actually used directly
-    const firstUrl = providers[0]?._getConnection?.()?.url ?? 'http://localhost:8545'
+    const firstUrl = providers[0]._getConnection().url
     super(firstUrl, chainId, { staticNetwork: true, ...options })
     this.#providers = providers
   }
