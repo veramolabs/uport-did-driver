@@ -1,3 +1,10 @@
+## [5.1.1](https://github.com/veramolabs/uport-did-driver/compare/5.1.0...5.1.1) (2026-05-05)
+
+
+### Bug Fixes
+
+* **ci:** update release workflow to set remote URL with GitHub token ([#2](https://github.com/veramolabs/uport-did-driver/issues/2)) ([a0d9847](https://github.com/veramolabs/uport-did-driver/commit/a0d98473be025a9a19653c25933e99df7ce4fc31))
+
 # [5.1.0](https://github.com/veramolabs/uport-did-driver/compare/5.0.8...5.1.0) (2026-05-05)
 
 
