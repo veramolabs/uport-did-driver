@@ -16,7 +16,7 @@ export const timers = {}
 function buildProvider(chainId, rpcUrls) {
   const provider = buildFailoverProvider(chainId, rpcUrls)
   provider.on('debug', (info) => {
-    const rpcUrl = info.action === 'sendRpcPayload' ? info.provider?._getConnection?.()?.url : null
+    const rpcUrl = info.provider?._getConnection?.()?.url
     if (info.action === 'sendRpcPayload' && rpcUrl) {
       const startTime = Date.now()
       timers[rpcUrl] = { ...timers[rpcUrl], [info.payload.id]: startTime }
@@ -244,7 +244,9 @@ const app = express()
 app.use(actuator())
 
 app.get('/1.0/identifiers/*did', function (req, res) {
-  const did = req.params.did[0]
+  const segments = Array.isArray(req.params.did) ? req.params.did : [req.params.did]
+  const qs = req.originalUrl.includes('?') ? req.originalUrl.slice(req.originalUrl.indexOf('?')) : ''
+  const did = segments.join('/') + qs
 
   console.log('Resolving DID: ' + did)
 
