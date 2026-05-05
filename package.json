@@ -24,7 +24,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/veramolabs/uport-did-driver.git"
+    "url": "https://github.com/veramolabs/uport-did-driver"
   },
   "license": "Apache-2.0",
   "dependencies": {
