@@ -3,7 +3,6 @@ import ethr from 'ethr-did-resolver'
 import ens from 'ens-did-resolver'
 import { getResolver as getWebResolver } from 'web-did-resolver'
 import { getResolver as getPeerResolver } from 'peer-did-resolver'
-import { getResolver as getPlcResolver } from 'plc-did-resolver'
 import express from 'express'
 import actuator from 'express-actuator'
 import { FallbackProvider, JsonRpcProvider } from 'ethers'
@@ -268,8 +267,6 @@ const resolver = new Resolver({
   }),
   ...getWebResolver(),
   ...getPeerResolver(),
-  ...getPlcResolver(),
-  // ...get3IDResolver(ceramic)
 })
 
 const app = express()
