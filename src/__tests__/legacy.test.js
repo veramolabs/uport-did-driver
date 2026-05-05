@@ -1,5 +1,6 @@
 import app from '../app.js'
 import request from 'supertest'
+import { describe, expect, it } from 'vitest'
 
 describe('uport-did-driver responds with did doc for', () => {
   it.skip('responds with didResolutionResult for did:nacl:Md8JiMIwsapml_FtQ2ngnGftNP5UmVCAUuhnLyAsPxI', async () => {
@@ -40,11 +41,11 @@ describe('uport-did-driver responds with error', () => {
     })
   })
 
-  it('HTTP 404 for root path', (done) => {
-    request(app).get('/').expect(404, done)
+  it('HTTP 404 for root path', async () => {
+    await request(app).get('/').expect(404)
   })
 
-  it('HTTP 404 for unknown paths', (done) => {
-    request(app).get('/random/other').expect(404, done)
+  it('HTTP 404 for unknown paths', async () => {
+    await request(app).get('/random/other').expect(404)
   })
 })

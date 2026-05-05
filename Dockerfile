@@ -1,14 +1,16 @@
-FROM node:24.14.0
-LABEL maintainer="Mircea NISTOR <mircea.nistor@consensys.net>"
-LABEL repository="git@github.com:uport-project/uport-did-driver.git"
+FROM cgr.dev/chainguard/node:latest-dev AS build
+WORKDIR /uport-did-driver
+COPY package.json pnpm-lock.yaml ./
+RUN corepack prepare pnpm@10 --activate && corepack pnpm install --prod --frozen-lockfile
 
-USER root
+FROM cgr.dev/chainguard/node:latest
+LABEL maintainer="Mircea NISTOR <work@mirceanis.xyz>"
+LABEL repository="git+ssh://git@github.com/veramolabs/uport-did-driver.git"
 
-# add source files
-RUN mkdir "uport-did-driver"
-ADD LICENSE package.json yarn.lock README.md uport-did-driver/
-ADD src/ uport-did-driver/src/
-RUN cd uport-did-driver && yarn install --prod --frozen-lockfile
+WORKDIR /uport-did-driver
+COPY --from=build /uport-did-driver/node_modules ./node_modules
+COPY LICENSE README.md ./
+COPY src/ ./src/
 
 EXPOSE 8081
 

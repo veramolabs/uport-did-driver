@@ -1,9 +1,7 @@
 import app, { providerConfig, timers } from '../app.js'
 import request from 'supertest'
-import { afterAll, describe, expect, it, jest } from '@jest/globals'
+import { afterAll, describe, expect, it } from 'vitest'
 import { deployments } from 'ethr-did-resolver'
-
-jest.setTimeout(30000)
 
 describe('did:ethr driver', () => {
   afterAll(() => {
@@ -81,8 +79,8 @@ describe('did:ethr driver', () => {
       expect(response.status).toBe(200)
       expect(response.body).toEqual({
         didDocumentMetadata: {
-          nextVersionId: '12090175',
           nextUpdate: '2021-03-22T18:14:29Z',
+          nextVersionId: '12090175',
         },
         didResolutionMetadata: {
           contentType: 'application/did+ld+json',
@@ -167,6 +165,37 @@ describe('did:ethr driver', () => {
       expect.assertions(1)
       const did = `did:ethr:${chainId}:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736`
       const response = await request(app).get(`/1.0/identifiers/${did}`)
+      expect(response.body.didDocument).toHaveProperty('verificationMethod')
+    })
+  })
+
+  describe('resolves historical DIDs (requires archive node)', () => {
+    it('deactivated DID (block 13144265)', async () => {
+      const did = 'did:ethr:0xd6ce4c87ec3fb6e80d87ff5fa7c5ec8fdefadf5c'
+      const response = await request(app).get(`/1.0/identifiers/${did}`)
+      expect(response.status).toBe(200)
+      expect(response.body.didDocumentMetadata).toHaveProperty('deactivated', true)
+    })
+
+    it('deactivated DID at versionId=0 is not deactivated', async () => {
+      const did = 'did:ethr:0xd6ce4c87ec3fb6e80d87ff5fa7c5ec8fdefadf5c'
+      const response = await request(app).get(`/1.0/identifiers/${did}?versionId=0`)
+      expect(response.status).toBe(200)
+      expect(response.body.didDocumentMetadata.deactivated).toBeUndefined()
+      expect(response.body.didDocument).not.toBeNull()
+    })
+
+    it('DID with extra secp256k1 key (block 8612549)', async () => {
+      const did = 'did:ethr:0xe6fe788d8ca214a080b0f6ac7f48480b2aefa9a6'
+      const response = await request(app).get(`/1.0/identifiers/${did}`)
+      expect(response.status).toBe(200)
+      expect(response.body.didDocument).toHaveProperty('verificationMethod')
+    })
+
+    it('DID with TravelRuleEmail service (block 18631820)', async () => {
+      const did = 'did:ethr:0x6918893854b2eb01b194c46c4efe2ea1ef36b7bc'
+      const response = await request(app).get(`/1.0/identifiers/${did}`)
+      expect(response.status).toBe(200)
       expect(response.body.didDocument).toHaveProperty('verificationMethod')
     })
   })
