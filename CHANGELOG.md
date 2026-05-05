@@ -1,3 +1,16 @@
+# [5.1.0](https://github.com/veramolabs/uport-did-driver/compare/5.0.8...5.1.0) (2026-05-05)
+
+
+### Bug Fixes
+
+* **deps:** Update dependency did-resolver to v5 ([fcbf15b](https://github.com/veramolabs/uport-did-driver/commit/fcbf15b0ed69ec9aee2e5003facf385fd5d93008))
+* use all path segments when resolving DIDs ([023f4e8](https://github.com/veramolabs/uport-did-driver/commit/023f4e8ec4e41af085b64ad920c696880807e218))
+
+
+### Features
+
+* **driver:** add FailoverProvider for resilient RPC, update provider logic and tests ([d26357b](https://github.com/veramolabs/uport-did-driver/commit/d26357b0f294f99f28fcbb4a0efce92c295724ba))
+
 ## [5.0.8](https://github.com/uport-project/uport-did-driver/compare/5.0.7...5.0.8) (2026-03-06)
 
 
