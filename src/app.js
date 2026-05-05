@@ -5,40 +5,28 @@ import { getResolver as getWebResolver } from 'web-did-resolver'
 import { getResolver as getPeerResolver } from 'peer-did-resolver'
 import express from 'express'
 import actuator from 'express-actuator'
-import { FallbackProvider, JsonRpcProvider } from 'ethers'
+import { buildFailoverProvider } from './failoverProvider.js'
 
-// import { CeramicClient } from '@ceramicnetwork/http-client'
-// import { getResolver as get3IDResolver } from '@ceramicnetwork/3id-did-resolver'
-// // This public gateway is currently deprecated. Removing support for did:3 until we can spin up a more stable gateway.
-// const ceramic = new CeramicClient('https://gateway.ceramic.network')
-
-//this project ID is only useful for ethr-did resolution
+// this project ID is only useful for ethr-did resolution
 const infuraId = 'ec9c99d75b834bac8dd4bfacad8cfdf7'
 
 // used for some benchmarking
 export const timers = {}
 
 function buildProvider(chainId, rpcUrls) {
-  const jsonRpcProviders = rpcUrls.map((rpcUrl) => {
-    const provider = new JsonRpcProvider(rpcUrl, chainId, { staticNetwork: true })
-    provider.on('debug', (info) => {
-      if (info.action === 'sendRpcPayload') {
-        // console.log(`RPC call to ${rpcUrl} with id ${info.payload.id}`)
-        const startTime = Date.now()
-        timers[rpcUrl] = { ...timers[rpcUrl], [info.payload.id]: startTime }
-      } else if (info.action === 'receiveRpcResult') {
-        // console.log(`RPC response from ${rpcUrl} with id ${info.result[0]?.id}`)
-        const id = parseInt(info.result[0]?.id)
-        const startTime = timers[rpcUrl]?.[id] ?? Date.now()
-        const elapsed = Date.now() - startTime
-        timers[rpcUrl] = { ...timers[rpcUrl], [id]: elapsed }
-        // console.log(`RPC call to ${rpcUrl} took ${elapsed}ms`)
-      }
-    })
-
-    return provider
+  const provider = buildFailoverProvider(chainId, rpcUrls)
+  provider.on('debug', (info) => {
+    const rpcUrl = info.action === 'sendRpcPayload' ? info.provider?._getConnection?.()?.url : null
+    if (info.action === 'sendRpcPayload' && rpcUrl) {
+      const startTime = Date.now()
+      timers[rpcUrl] = { ...timers[rpcUrl], [info.payload.id]: startTime }
+    } else if (info.action === 'receiveRpcResult' && rpcUrl) {
+      const id = parseInt(info.result[0]?.id)
+      const startTime = timers[rpcUrl]?.[id] ?? Date.now()
+      timers[rpcUrl] = { ...timers[rpcUrl], [id]: Date.now() - startTime }
+    }
   })
-  return new FallbackProvider(jsonRpcProviders, chainId, { quorum: 1 })
+  return provider
 }
 
 // configure a bunch of providers using some of the RPC URLs found in https://github.com/ethereum-lists/chains
@@ -53,38 +41,20 @@ export const providerConfig = {
         `https://mainnet.infura.io/v3/${infuraId}`,
         'https://eth-pokt.nodies.app',
         'https://ethereum-rpc.publicnode.com',
-        'https://eth.meowrpc.com',
-        // 'https://eth.drpc.org',
-        // 'https://eth.llamarpc.com',
-        // 'https://eth.rpc.blxrbdn.com',
-        // 'https://rpc.mevblocker.io',
-        // 'https://ethereum.blockpi.network/v1/rpc/public',
-        // 'https://core.gashawk.io/rpc',
-        // 'https://rpc.mevblocker.io/fast',
-        // 'https://rpc.mevblocker.io/noreverts',
-        // 'https://rpc.mevblocker.io/fullprivacy',
-        // 'https://rpc.payload.de',
-        // 'https://singapore.rpc.blxrbdn.com',
-        // 'https://virginia.rpc.blxrbdn.com',
-        // 'https://uk.rpc.blxrbdn.com',
-        // 'https://mainnet.gateway.tenderly.co',
-        // 'https://ethereum.rpc.subquery.network/public',
-        // 'https://eth-mainnet.public.blastapi.io',
-        // 'https://rpc.graffiti.farm',
-        // 'https://gateway.tenderly.co/public/mainnet',
-        // 'https://eth-mainnet.g.alchemy.com/v2/demo',
-        // 'https://api.zan.top/node/v1/eth/mainnet/public',
-        // 'https://api.securerpc.com/v1',
-        // 'https://rpc.lokibuilder.xyz/wallet',
-        // 'https://rpc.flashbots.net/fast',
-        // 'https://eth.merkle.io',
-        // 'https://rpc.flashbots.net',
-        // 'https://rpc.ankr.com/eth',
-        // 'https://cloudflare-eth.com',
-        // 'https://api.stateless.solutions/ethereum/v1/demo',
-        // 'https://1rpc.io/eth',
-        // 'https://rpc.public.curie.radiumblock.co/ws/ethereum',
-        // 'https://rpc.public.curie.radiumblock.co/http/ethereum',
+        'https://rpc.mevblocker.io',
+        'https://rpc.mevblocker.io/fast',
+        'https://rpc.mevblocker.io/noreverts',
+        'https://rpc.mevblocker.io/fullprivacy',
+        'https://mainnet.gateway.tenderly.co',
+        'https://gateway.tenderly.co/public/mainnet',
+        'https://eth-mainnet.public.blastapi.io',
+        // Below: known to fail on historical getLogs — kept commented for reference
+        // 'https://eth.meowrpc.com',        // CALL_EXCEPTION data=null
+        // 'https://eth.drpc.org',           // 408 rate-limit
+        // 'https://eth.llamarpc.com',       // 429 + conn reset
+        // 'https://eth.rpc.blxrbdn.com',    // -32000 method not available
+        // 'https://ethereum.rpc.subquery.network/public', // timeout
+        // 'https://1rpc.io/eth',            // code 4444 pruned history
       ]),
     },
     {
@@ -93,7 +63,7 @@ export const providerConfig = {
       registry: '0x03d5003bf0e79C5F5223588F347ebA39AfbC3818',
       legacyNonce: false,
       provider: buildProvider(11155111, [
-        // `https://sepolia.infura.io/v3/${infuraId}`,
+        `https://sepolia.infura.io/v3/${infuraId}`,
         'https://ethereum-sepolia-rpc.publicnode.com',
         'https://1rpc.io/sepolia',
         // 'https://endpoints.omniatech.io/v1/eth/sepolia/public',
@@ -273,10 +243,8 @@ const app = express()
 
 app.use(actuator())
 
-app.get('/1.0/identifiers/*', function (req, res) {
-  const url = req.url
-  const regex = new RegExp('/1.0/identifiers/(did:.*)')
-  const did = regex.exec(url)[1]
+app.get('/1.0/identifiers/*did', function (req, res) {
+  const did = req.params.did[0]
 
   console.log('Resolving DID: ' + did)
 
