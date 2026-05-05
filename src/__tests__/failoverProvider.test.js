@@ -2,13 +2,13 @@ import { describe, it, expect, vi } from 'vitest'
 import { FailoverProvider } from '../failoverProvider.js'
 
 // Minimal mock for a JsonRpcProvider — only `send` matters
-const mockProvider = (impl) => ({ send: vi.fn(impl), _getConnection: () => ({ url: 'http://mock' }) })
+const mockProvider = (impl) => ({ send: vi.fn(impl) })
 
 describe('FailoverProvider', () => {
   describe('happy path', () => {
     it('returns result from first provider', async () => {
       const p1 = mockProvider(() => Promise.resolve('0x1'))
-      const provider = new FailoverProvider([p1], 1)
+      const provider = new FailoverProvider('http://mock', [p1], 1)
       const result = await provider.send('eth_blockNumber', [])
       expect(result).toBe('0x1')
       expect(p1.send).toHaveBeenCalledWith('eth_blockNumber', [])
@@ -20,7 +20,7 @@ describe('FailoverProvider', () => {
       const err = Object.assign(new Error('network error'), { code: 'NETWORK_ERROR' })
       const p1 = mockProvider(() => Promise.reject(err))
       const p2 = mockProvider(() => Promise.resolve('0x2'))
-      const provider = new FailoverProvider([p1, p2], 1)
+      const provider = new FailoverProvider('http://mock', [p1, p2], 1)
       const result = await provider.send('eth_blockNumber', [])
       expect(result).toBe('0x2')
     })
@@ -29,7 +29,7 @@ describe('FailoverProvider', () => {
       const err = Object.assign(new Error('server error'), { code: 'SERVER_ERROR' })
       const p1 = mockProvider(() => Promise.reject(err))
       const p2 = mockProvider(() => Promise.resolve('0x2'))
-      const provider = new FailoverProvider([p1, p2], 1)
+      const provider = new FailoverProvider('http://mock', [p1, p2], 1)
       const result = await provider.send('eth_blockNumber', [])
       expect(result).toBe('0x2')
     })
@@ -38,7 +38,7 @@ describe('FailoverProvider', () => {
       const err = Object.assign(new Error('timeout'), { code: 'ETIMEDOUT' })
       const p1 = mockProvider(() => Promise.reject(err))
       const p2 = mockProvider(() => Promise.resolve('0x2'))
-      const provider = new FailoverProvider([p1, p2], 1)
+      const provider = new FailoverProvider('http://mock', [p1, p2], 1)
       const result = await provider.send('eth_blockNumber', [])
       expect(result).toBe('0x2')
     })
@@ -52,7 +52,7 @@ describe('FailoverProvider', () => {
         return Promise.resolve([])
       })
       const p2 = mockProvider(() => Promise.resolve([{ data: '0xabc' }]))
-      const provider = new FailoverProvider([p1, p2], 1)
+      const provider = new FailoverProvider('http://mock', [p1, p2], 1)
       const result = await provider.send('eth_getLogs', [{}])
       expect(result).toEqual([{ data: '0xabc' }])
     })
@@ -63,7 +63,7 @@ describe('FailoverProvider', () => {
       const err = Object.assign(new Error('pruned history unavailable'), { code: 4444 })
       const p1 = mockProvider(() => Promise.reject(err))
       const p2 = mockProvider(() => Promise.resolve([{ data: '0xabc' }]))
-      const provider = new FailoverProvider([p1, p2], 1)
+      const provider = new FailoverProvider('http://mock', [p1, p2], 1)
       const result = await provider.send('eth_getLogs', [{}])
       expect(result).toEqual([{ data: '0xabc' }])
     })
@@ -74,7 +74,7 @@ describe('FailoverProvider', () => {
       const err = Object.assign(new Error('call exception'), { code: 'CALL_EXCEPTION', data: null })
       const p1 = mockProvider(() => Promise.reject(err))
       const p2 = mockProvider(() => Promise.resolve('0xresult'))
-      const provider = new FailoverProvider([p1, p2], 1)
+      const provider = new FailoverProvider('http://mock', [p1, p2], 1)
       const result = await provider.send('eth_call', [{}])
       expect(result).toBe('0xresult')
     })
@@ -83,7 +83,7 @@ describe('FailoverProvider', () => {
       const err = Object.assign(new Error('call exception'), { code: 'CALL_EXCEPTION', data: '0x1234' })
       const p1 = mockProvider(() => Promise.reject(err))
       const p2 = mockProvider(() => Promise.resolve('0xresult'))
-      const provider = new FailoverProvider([p1, p2], 1)
+      const provider = new FailoverProvider('http://mock', [p1, p2], 1)
       await expect(provider.send('eth_call', [{}])).rejects.toMatchObject({ code: 'CALL_EXCEPTION' })
       expect(p2.send).not.toHaveBeenCalled()
     })
@@ -95,7 +95,7 @@ describe('FailoverProvider', () => {
       const params = [{ fromBlock: '0xC57049', toBlock: '0xC57049' }] // block 12939337
       const p1 = mockProvider(() => Promise.resolve([]))
       const p2 = mockProvider(() => Promise.resolve([{ data: '0xabc' }]))
-      const provider = new FailoverProvider([p1, p2], 1)
+      const provider = new FailoverProvider('http://mock', [p1, p2], 1)
       const result = await provider.send('eth_getLogs', params)
       expect(result).toEqual([{ data: '0xabc' }])
     })
@@ -104,7 +104,7 @@ describe('FailoverProvider', () => {
       const params = [{ fromBlock: 'latest', toBlock: 'latest' }]
       const p1 = mockProvider(() => Promise.resolve([]))
       const p2 = mockProvider(() => Promise.resolve([{ data: '0xabc' }]))
-      const provider = new FailoverProvider([p1, p2], 1)
+      const provider = new FailoverProvider('http://mock', [p1, p2], 1)
       const result = await provider.send('eth_getLogs', params)
       expect(result).toEqual([])
       expect(p2.send).not.toHaveBeenCalled()
@@ -117,18 +117,22 @@ describe('FailoverProvider', () => {
       const err2 = Object.assign(new Error('err2'), { code: 'SERVER_ERROR' })
       const p1 = mockProvider(() => Promise.reject(err1))
       const p2 = mockProvider(() => Promise.reject(err2))
-      const provider = new FailoverProvider([p1, p2], 1)
+      const provider = new FailoverProvider('http://mock', [p1, p2], 1)
       await expect(provider.send('eth_blockNumber', [])).rejects.toMatchObject({ message: 'err2' })
     })
   })
 
   describe('constructor validation', () => {
     it('throws when providers is empty', () => {
-      expect(() => new FailoverProvider([], 1)).toThrow('FailoverProvider requires at least one provider')
+      expect(() => new FailoverProvider('http://mock', [], 1)).toThrow(
+        'FailoverProvider requires at least one provider',
+      )
     })
 
     it('throws when providers is null', () => {
-      expect(() => new FailoverProvider(null, 1)).toThrow('FailoverProvider requires at least one provider')
+      expect(() => new FailoverProvider('http://mock', null, 1)).toThrow(
+        'FailoverProvider requires at least one provider',
+      )
     })
   })
 })

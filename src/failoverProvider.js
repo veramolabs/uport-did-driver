@@ -26,12 +26,9 @@ function isHistoricalBlockRange(params) {
 export class FailoverProvider extends JsonRpcProvider {
   #providers
 
-  constructor(providers, chainId, options) {
+  constructor(url, providers, chainId, options) {
     if (!providers?.length) throw new Error('FailoverProvider requires at least one provider')
-    // Use the first provider's connection URL as the "primary" for JsonRpcProvider init
-    // We'll override send() so this URL is never actually used directly
-    const firstUrl = providers[0]._getConnection().url
-    super(firstUrl, chainId, { staticNetwork: true, ...options })
+    super(url, chainId, { staticNetwork: true, ...options })
     this.#providers = providers
   }
 
@@ -62,5 +59,5 @@ export class FailoverProvider extends JsonRpcProvider {
 // Factory: builds a FailoverProvider from a list of RPC URLs
 export function buildFailoverProvider(chainId, rpcUrls) {
   const providers = rpcUrls.map((url) => new JsonRpcProvider(url, chainId, { staticNetwork: true }))
-  return new FailoverProvider(providers, chainId)
+  return new FailoverProvider(rpcUrls[0], providers, chainId)
 }

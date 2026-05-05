@@ -1,4 +1,4 @@
-import { execSync, spawn } from 'child_process'
+import { execSync } from 'child_process'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 const IMAGE = 'uport-did-driver-test:latest'
@@ -56,10 +56,7 @@ beforeAll(async () => {
   } catch (_) {}
 
   console.log('[docker] Starting container...')
-  spawn('docker', ['run', '--rm', '--name', CONTAINER, '-p', `${PORT}:8081`, IMAGE], {
-    stdio: 'ignore',
-    detach: true,
-  })
+  execSync(`docker run -d --rm --name ${CONTAINER} -p ${PORT}:8081 ${IMAGE}`, { stdio: 'ignore' })
 
   console.log('[docker] Waiting for container to be ready...')
   await waitForReady(`${BASE_URL}/health`)
