@@ -13,30 +13,29 @@
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
     "format": "prettier --write '{src,docs,.github/workflows,!build}/**/*'",
     "getVersion": "echo \"console.log(require('./package.json').version)\" | node",
-    "build": "docker build -t uport/uni-resolver-driver-did-uport:latest -t uport/uni-resolver-driver-did-uport:$(yarn -s getVersion) .",
-    "push": "docker push uport/uni-resolver-driver-did-uport:latest && docker push uport/uni-resolver-driver-did-uport:$(yarn -s getVersion)",
+    "build": "docker build -t uport/uni-resolver-driver-did-uport:latest -t uport/uni-resolver-driver-did-uport:$(pnpm -s getVersion) .",
+    "push": "docker push uport/uni-resolver-driver-did-uport:latest && docker push uport/uni-resolver-driver-did-uport:$(pnpm -s getVersion)",
     "release": "semantic-release --debug"
   },
   "author": "Christian Lundkvist",
   "contributors": [
-    "Andres Junge",
-    "Mircea Nistor"
+    "Mircea Nistor <work@mirceanis.xyz>",
+    "Andres Junge"
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:uport-project/uport-did-driver.git"
+    "url": "git+ssh://git@github.com/veramolabs/uport-did-driver.git"
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "did-resolver": "^5.0.0",
+    "did-resolver": "^5.0.1",
     "ens-did-resolver": "^1.0.4",
-    "ethers": "^6.13.3",
-    "ethr-did-resolver": "^11.0.1",
-    "express": "^4.21.0",
+    "ethers": "^6.16.0",
+    "ethr-did-resolver": "^11.1.2",
+    "express": "^5.2.1",
     "express-actuator": "^1.8.4",
     "peer-did-resolver": "^2.0.0",
-    "plc-did-resolver": "^1.0.0",
-    "web-did-resolver": "^2.0.27"
+    "web-did-resolver": "^2.0.32"
   },
   "devDependencies": {
     "@jest/globals": "30.2.0",
@@ -48,8 +47,8 @@
     "@semantic-release/npm": "13.1.5",
     "@semantic-release/release-notes-generator": "14.1.0",
     "cross-env": "10.1.0",
-    "jest": "30.2.0",
-    "prettier": "3.8.1",
+    "jest": "30.3.0",
+    "prettier": "3.8.3",
     "semantic-release": "25.0.3",
     "supertest": "7.2.2"
   },
@@ -58,6 +57,5 @@
     "coveragePathIgnorePatterns": [
       "/node_modules/"
     ]
-  },
-  "packageManager": "yarn@1.22.22"
+  }
 }

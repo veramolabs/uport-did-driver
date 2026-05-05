@@ -1,7 +1,7 @@
 FROM cgr.dev/chainguard/node:latest-dev AS build
 WORKDIR /uport-did-driver
-COPY package.json yarn.lock ./
-RUN yarn install --prod --frozen-lockfile
+COPY package.json pnpm-lock.yaml ./
+RUN corepack prepare pnpm@latest --activate && corepack pnpm install --prod --frozen-lockfile
 
 FROM cgr.dev/chainguard/node:latest
 LABEL maintainer="Mircea NISTOR <work@mirceanis.xyz>"

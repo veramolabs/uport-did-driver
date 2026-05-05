@@ -10,24 +10,27 @@ jobs:
       GH_TOKEN: ${{secrets.GH_TOKEN}}
       GH_USER: ${{secrets.GH_USER}}
       GH_EMAIL: ${{secrets.GH_EMAIL}}
-      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
-      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      NPM_TOKEN: unused
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
-      - name: Use Node.js
-        uses: actions/setup-node@v6
+          persist-credentials: false
+      - uses: pnpm/action-setup@8912a9102ac27614460f54aedde9e1e7f9aec20d # v6.0.5
+        with:
+          version: 10
+      - name: 'Setup Node.js with pnpm cache'
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: 24
-          cache: 'yarn'
 
-      - run: yarn install --frozen-lockfile
-      - run: yarn test
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+      - run: pnpm run test
 
       - name: 'Setup git coordinates'
         run: |
@@ -35,8 +38,8 @@ jobs:
           git config user.name $GH_USER
           git config user.email $GH_EMAIL
       - name: Login to DockerHub Registry
-        run: echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
+        run: echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_USERNAME --password-stdin
 
       - name: Push the tagged Docker image
         if: github.ref == 'refs/heads/master'
-        run: yarn release
+        run: pnpm run release

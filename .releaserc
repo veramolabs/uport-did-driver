@@ -10,8 +10,8 @@
       "npmPublish": false
     }],
     ["@semantic-release/exec", {
-      "prepareCmd": "yarn build",
-      "publishCmd": "yarn push"
+      "prepareCmd": "pnpm run build",
+      "publishCmd": "pnpm run push"
     }],
     "@semantic-release/git",
     "@semantic-release/github"
