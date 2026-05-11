@@ -55,7 +55,6 @@ describe('did:ethr driver', () => {
           '@context': [
             'https://www.w3.org/ns/did/v1',
             'https://w3id.org/security/suites/secp256k1recovery-2020/v2',
-            'https://w3id.org/security/v3-unstable',
           ],
           authentication: ['did:ethr:0xdca7ef03e98e0dc2b855be647c39abe984fcf21b#controller'],
           assertionMethod: ['did:ethr:0xdca7ef03e98e0dc2b855be647c39abe984fcf21b#controller'],
@@ -89,7 +88,6 @@ describe('did:ethr driver', () => {
           '@context': [
             'https://www.w3.org/ns/did/v1',
             'https://w3id.org/security/suites/secp256k1recovery-2020/v2',
-            'https://w3id.org/security/v3-unstable',
           ],
           id: 'did:ethr:0x26bf14321004e770e7a8b080b7a526d8eed8b388',
           verificationMethod: [
@@ -120,7 +118,13 @@ describe('did:ethr driver', () => {
           '@context': [
             'https://www.w3.org/ns/did/v1',
             'https://w3id.org/security/suites/secp256k1recovery-2020/v2',
-            'https://w3id.org/security/v3-unstable',
+            'https://w3id.org/security/v2',
+            {
+              publicKeyJwk: {
+                '@id': 'https://w3id.org/security#publicKeyJwk',
+                '@type': '@json',
+              },
+            },
           ],
           authentication: [
             'did:ethr:0x02b97c30de767f084ce3080168ee293053ba33b235d7116a3263d29f1450936b71#controller',
@@ -141,7 +145,12 @@ describe('did:ethr driver', () => {
             {
               controller: 'did:ethr:0x02b97c30de767f084ce3080168ee293053ba33b235d7116a3263d29f1450936b71',
               id: 'did:ethr:0x02b97c30de767f084ce3080168ee293053ba33b235d7116a3263d29f1450936b71#controllerKey',
-              publicKeyHex: '02b97c30de767f084ce3080168ee293053ba33b235d7116a3263d29f1450936b71',
+              publicKeyJwk: {
+                crv: 'secp256k1',
+                kty: 'EC',
+                x: 'uXww3nZ_CEzjCAFo7ikwU7ozsjXXEWoyY9KfFFCTa3E',
+                y: 'Eo3YCZAgmRvnzQFA2p1y7gwQrnu4abZgVJKO41t2OeQ',
+              },
               type: 'EcdsaSecp256k1VerificationKey2019',
             },
           ],
