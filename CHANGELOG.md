@@ -1,3 +1,15 @@
+# [6.0.0](https://github.com/veramolabs/uport-did-driver/compare/5.1.1...6.0.0) (2026-05-11)
+
+
+### chore
+
+* **deps:** bump ethr-did-resolver to v12 ([#3](https://github.com/veramolabs/uport-did-driver/issues/3)) ([61d0f3c](https://github.com/veramolabs/uport-did-driver/commit/61d0f3cb01585620355563f31a047ed09c48d3be))
+
+
+### BREAKING CHANGES
+
+* **deps:** this is a major bump for did:ethr so marking this as breaking too.
+
 ## [5.1.1](https://github.com/veramolabs/uport-did-driver/compare/5.1.0...5.1.1) (2026-05-05)
 
 
