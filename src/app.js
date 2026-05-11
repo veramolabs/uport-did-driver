@@ -109,9 +109,9 @@ export const providerConfig = {
       provider: buildProvider(17000, [
         'https://ethereum-holesky-rpc.publicnode.com',
         'https://holesky.drpc.org',
+        'https://holesky.gateway.tenderly.co',
         // 'https://1rpc.io/holesky',
         // 'https://rpc.holesky.io',
-        // 'https://holesky.gateway.tenderly.co',
         // 'https://ethereum-holesky.blockpi.network/v1/rpc/public',
         // 'https://endpoints.omniatech.io/v1/eth/holesky/public',
         // 'https://rpc.holesky.ethpandaops.io',

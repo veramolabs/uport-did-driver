@@ -81,6 +81,26 @@ describe('docker container', () => {
     })
   })
 
+  describe('deactivated DID with versionId=0', () => {
+    it('returns genesis document for deactivated did:ethr with ?versionId=0', async () => {
+      const did = 'did:ethr:0xd6ce4c87ec3fb6e80d87ff5fa7c5ec8fdefadf5c?versionId=0'
+      const res = await resolve(did)
+      expect(res.status).toBe(200)
+      const body = await res.json()
+      expect(body.didDocument).not.toBeNull()
+      expect(body.didResolutionMetadata.error).toBeUndefined()
+      expect(body.didDocument.id).toBe('did:ethr:0xd6ce4c87ec3fb6e80d87ff5fa7c5ec8fdefadf5c')
+    })
+
+    it('resolving deactivated DID without versionId returns deactivated document', async () => {
+      const did = 'did:ethr:0xd6ce4c87ec3fb6e80d87ff5fa7c5ec8fdefadf5c'
+      const res = await resolve(did)
+      expect(res.status).toBe(200)
+      const body = await res.json()
+      expect(body.didDocumentMetadata.deactivated).toBe(true)
+    })
+  })
+
   describe('error cases', () => {
     it('returns unsupportedDidMethod for unknown method', async () => {
       const res = await resolve('did:unknown:abc123')
