@@ -1,3 +1,15 @@
+# [7.0.0](https://github.com/veramolabs/uport-did-driver/compare/6.0.0...7.0.0) (2026-05-18)
+
+
+### Bug Fixes
+
+* **deps:** bump ethr-did-resolver to v13 ([#4](https://github.com/veramolabs/uport-did-driver/issues/4)) ([f0a040f](https://github.com/veramolabs/uport-did-driver/commit/f0a040f46743e67ea91e1717043fa8bc7c1d7600))
+
+
+### BREAKING CHANGES
+
+* **deps:** this is a major bump for did:ethr so marking this as breaking too.
+
 # [6.0.0](https://github.com/veramolabs/uport-did-driver/compare/5.1.1...6.0.0) (2026-05-11)
 
 
