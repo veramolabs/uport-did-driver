@@ -18,8 +18,8 @@ importers:
         specifier: ^6.16.0
         version: 6.16.0
       ethr-did-resolver:
-        specifier: ^13.0.0
-        version: 13.0.0
+        specifier: ^13.1.0
+        version: 13.1.0
       express:
         specifier: ^5.2.1
         version: 5.2.1
@@ -854,8 +854,8 @@ packages:
     resolution: {integrity: sha512-U1wulmetNymijEhpSEQ7Ct/P/Jw9/e7R1j5XIbPRydgV2DjLVMsULDlNksq3RQnFgKoLlZf88ijYtWEXcPa07A==}
     engines: {node: '>=14.0.0'}
 
-  ethr-did-resolver@13.0.0:
-    resolution: {integrity: sha512-BTDRINbgxj6ZbmndUve1CfCj+SQMQqGUUCk7fC6XSpQ7b3doF/nOLP2A1LOw57D4trQsZW6dwvHmLzZlAnzqtg==}
+  ethr-did-resolver@13.1.0:
+    resolution: {integrity: sha512-ew1OrXhU6BJeYozj7EfzH+4JADYksMKmuVAY6rooICJ9EtJDRKXv505NUBqdKYAtRfpAcEYgr7+sDpbn2u0wZg==}
 
   execa@5.1.1:
     resolution: {integrity: sha512-8uSpZZocAZRBAPIEINJj3Lo9HyGitllczc27Eh5YYojjMFMn8yHMDMaUHE2Jqfq05D/wucwI4JGURyXt1vchyg==}
@@ -3131,7 +3131,7 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  ethr-did-resolver@13.0.0:
+  ethr-did-resolver@13.1.0:
     dependencies:
       did-resolver: 5.0.1
       ethers: 6.16.0
