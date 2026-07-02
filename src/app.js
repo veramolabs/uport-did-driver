@@ -230,9 +230,15 @@ const resolver = new Resolver({
   ...ens.getResolver({
     networks: providerConfig.networks.filter((network) => network.chainId === 11155111),
     provider: buildProvider(1, [
-      'https://eth-pokt.nodies.app',
+      'https://mainnet.gateway.tenderly.co',
+      'https://gateway.tenderly.co/public/mainnet',
       'https://ethereum-rpc.publicnode.com',
-      'https://eth.meowrpc.com',
+      'https://eth-pokt.nodies.app',
+      'https://rpc.mevblocker.io',
+      'https://rpc.mevblocker.io/fast',
+      'https://rpc.mevblocker.io/noreverts',
+      'https://rpc.mevblocker.io/fullprivacy',
+      'https://eth-mainnet.public.blastapi.io',
     ]), // mainnet provider
   }),
   ...getWebResolver(),
