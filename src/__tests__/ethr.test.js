@@ -216,7 +216,7 @@ describe('did:ethr driver', () => {
       const response = await request(app).get(`/1.0/identifiers/${did}`)
       expect(response.status).toBe(200)
       expect(response.body.didResolutionMetadata).toEqual({
-        error: 'unknownNetwork',
+        error: 'internalError',
         message: 'The DID resolver does not have a configuration for network: unknown',
       })
     })

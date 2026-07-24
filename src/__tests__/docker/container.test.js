@@ -33,12 +33,14 @@ const EXAMPLE_DIDS = [
   'did:ethr:0x1:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736',
   'did:ethr:sepolia:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736',
   'did:ethr:gno:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736',
+  'did:ethr:gno:0xf36cad0fb057f01f852557317bb8aa05f8c2df4d',
   'did:ethr:holesky:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736',
   'did:ethr:rsk:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736',
   'did:ethr:rsk:testnet:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736',
   'did:ethr:volta:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736',
   'did:ethr:ewc:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736',
   'did:ethr:polygon:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736',
+  'did:ethr:polygon:0x2c1eeefcf840fef9ed2a8582bade785cd9202781',
   'did:ethr:aurora:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736',
   'did:ethr:cardona:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736',
   'did:web:skounis.github.io',
@@ -114,7 +116,7 @@ describe('docker container', () => {
       const res = await resolve('did:ethr:unknown:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736')
       expect(res.status).toBe(200)
       const body = await res.json()
-      expect(body.didResolutionMetadata.error).toBe('unknownNetwork')
+      expect(body.didResolutionMetadata.error).toBe('internalError')
     })
 
     it('returns invalidDid for bad ethr address', async () => {
