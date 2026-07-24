@@ -30,24 +30,24 @@
   "dependencies": {
     "did-resolver": "^5.0.1",
     "ens-did-resolver": "^1.0.4",
-    "ethers": "^6.16.0",
-    "ethr-did-resolver": "^13.1.0",
+    "ethers": "^6.17.0",
+    "ethr-did-resolver": "^14.0.0",
     "express": "^5.2.1",
     "express-actuator": "^1.8.4",
     "peer-did-resolver": "^2.0.0",
     "web-did-resolver": "^2.0.32"
   },
   "devDependencies": {
-    "@semantic-release/changelog": "6.0.3",
+    "@semantic-release/changelog": "7.0.0",
     "@semantic-release/commit-analyzer": "13.0.1",
     "@semantic-release/exec": "7.1.0",
-    "@semantic-release/git": "10.0.1",
-    "@semantic-release/github": "12.0.8",
+    "@semantic-release/git": "11.0.1",
+    "@semantic-release/github": "12.0.9",
     "@semantic-release/npm": "13.1.5",
     "@semantic-release/release-notes-generator": "14.1.1",
-    "prettier": "3.8.3",
-    "semantic-release": "25.0.3",
+    "prettier": "3.9.6",
+    "semantic-release": "25.0.8",
     "supertest": "7.2.2",
-    "vitest": "4.1.6"
+    "vitest": "4.1.10"
   }
 }

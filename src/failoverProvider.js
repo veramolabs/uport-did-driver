@@ -8,9 +8,11 @@ const RETRIABLE_CODES = new Set(['NETWORK_ERROR', 'SERVER_ERROR', 'ETIMEDOUT', '
 
 function isRetriableError(err) {
   if (RETRIABLE_CODES.has(err.code)) return true
-  if (err.code === -32000) return true
+  if (typeof err.code === 'number' && err.code <= -32000 && err.code >= -32099) return true
+  if (err.code === -32603) return true
   if (err.code === 4444) return true
   if (err.code === 'CALL_EXCEPTION' && err.data == null) return true
+  if (err.code === 'UNKNOWN_ERROR') return true
   return false
 }
 
