@@ -1,3 +1,10 @@
+## [7.1.1](https://github.com/veramolabs/uport-did-driver/compare/7.1.0...7.1.1) (2026-07-24)
+
+
+### Bug Fixes
+
+* **config:** bump ethr-did-resolver to v14 and harden ethr network failover ([#6](https://github.com/veramolabs/uport-did-driver/issues/6)) ([e729ecb](https://github.com/veramolabs/uport-did-driver/commit/e729ecbef84d343f12bf8e80e52d8bceff8dc7cc))
+
 # [7.1.0](https://github.com/veramolabs/uport-did-driver/compare/7.0.0...7.1.0) (2026-07-02)
 
 
